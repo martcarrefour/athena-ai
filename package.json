@@ -1,0 +1,56 @@
+{
+  "name": "athena-orm",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/martcarrefour/athena-orm.git"
+  },
+  "version": "0.0.1",
+  "description": "AthenaORM is a lightweight and developer-friendly library for interacting with Large Language Models (LLMs) like OpenAI, Anthropic, and Google PaLM. It provides a unified interface for managing multi-turn conversations, handling JSON or text-based responses, and simplifying API integrations.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "example": "tsc && node dist/examples/openai-example.js",
+    "publish:npm": "npm run clean && npm run build && npm publish",
+    "run:google-example": "tsx examples/google-example.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "llm",
+    "large language model",
+    "openai sdk",
+    "anthropic sdk",
+    "google palm sdk",
+    "unified llm api",
+    "ai sdk",
+    "ai chatbots",
+    "json response handling",
+    "typescript llm library",
+    "llm integration",
+    "nlp tools",
+    "ai development",
+    "context management",
+    "multi-turn conversation",
+    "ai assistants",
+    "athena-orm examples",
+    "data extraction from llm",
+    "ai data processing tools",
+    "llm abstraction"
+  ],
+  "author": "Dmitriy Prokushev",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^22.10.10",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}
