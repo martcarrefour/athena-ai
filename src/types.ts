@@ -1,23 +1,21 @@
 export interface AthenaConfig {
   provider: "openai" | "anthropic" | "google";
   apiKey: string;
-  baseUrl?: string; // для OpenAI (опц.)
-  model?: string; // для Google
-  // ... любые другие поля
+  baseUrl?: string;
+  model?: string;
 }
 
-// src/types.ts
 export interface Message {
   role: "user" | "assistant" | "system";
   content: string;
 }
 
 export interface LLMRequestOptions {
-  messages: Message[]; // Основные сообщения
-  format?: "json" | "text"; // Формат ответа
-  example?: Record<string, unknown>; // Пример JSON для нейросети
-  temperature?: number; // Настройка температуры
-  maxTokens?: number; // Максимальное количество токенов
+  messages: Message[];
+  format?: "json" | "text";
+  example?: Record<string, unknown>;
+  temperature?: number;
+  maxTokens?: number;
 }
 
 export interface LLMResponse {

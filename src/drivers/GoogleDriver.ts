@@ -1,4 +1,3 @@
-// src/AthenaORM/drivers/GoogleDriver.ts
 import { ILlmDriver, LlmCallOptions, StreamChunk } from "./ILlmDriver";
 
 async function* googleStreamResponse(

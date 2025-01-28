@@ -65,7 +65,6 @@ export class Athena {
   public async createMessage(options: LLMRequestOptions): Promise<LLMResponse> {
     const messages = [...this.context];
 
-    // Если нужен JSON, добавляем строгую инструкцию и пример
     if (options.format === "json" && options.example) {
       const exampleString = JSON.stringify(options.example, null, 2);
       messages.push({
@@ -74,26 +73,22 @@ export class Athena {
       });
     }
 
-    // Добавляем основные сообщения
     messages.push(...options.messages);
 
-    // Выполняем запрос
     const rawResponse = await this.call({
       messages,
       temperature: options.temperature || 0.7,
       maxTokens: options.maxTokens || 200,
     });
 
-    // Обработка результата
     let content: string | Record<string, unknown> = rawResponse;
     if (options.format === "json") {
       try {
-        content = JSON.parse(rawResponse); // Пытаемся распарсить как JSON
+        content = JSON.parse(rawResponse);
       } catch (error) {
-        content = parseMarkdownToJson(rawResponse); // Если это Markdown, конвертируем
+        content = parseMarkdownToJson(rawResponse);
       }
 
-      // Если пример передан, фильтруем результат
       if (options.example) {
         content = this.filterJsonByExample(
           content as Record<string, unknown>,
@@ -102,7 +97,6 @@ export class Athena {
       }
     }
 
-    // Если content не строка, конвертируем объект в строку
     return {
       content:
         typeof content === "string"

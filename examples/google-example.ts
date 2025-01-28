@@ -3,25 +3,21 @@ import { Athena } from "../src/Athena";
 import { AthenaConfig } from "../src/types";
 import { isJson } from "../src/utils";
 
-// Загружаем переменные окружения
 config();
 
 async function main() {
-  // Настраиваем конфигурацию AthenaORM
   const config: AthenaConfig = {
     provider: "google",
-    apiKey: process.env.GOOGLE_API_KEY || "", // Используем ключ из .env
-    model: "gemini-1.5-flash", // Используем корректное имя модели
+    apiKey: process.env.GOOGLE_API_KEY || "",
+    model: "gemini-1.5-flash",
   };
 
   const google = new Athena(config);
 
-  // Устанавливаем контекст
   google.addToContext([
     { role: "user", content: "You are a helpful assistant." },
   ]);
 
-  // Пример JSON, который мы ожидаем
   const exampleJson = {
     name: "",
     age: 20,
@@ -30,7 +26,6 @@ async function main() {
     address: "Russia, Moscow",
   };
 
-  // Отправляем запрос
   const response = await google.createMessage({
     messages: [
       {
@@ -46,7 +41,6 @@ async function main() {
 
   console.log("Raw Response Content:", response.raw);
 
-  // Проверяем, является ли content корректным JSON
   if (isJson(response.content)) {
     console.log(
       "Parsed JSON Response:",

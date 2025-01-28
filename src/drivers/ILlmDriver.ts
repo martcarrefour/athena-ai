@@ -1,6 +1,3 @@
-// src/AthenaORM/drivers/ILlmDriver.ts
-
-// Общий интерфейс ответа на токены usage, текст, ошибки и т.д.
 export interface StreamChunk {
   text?: string;
   usage?: {
@@ -10,10 +7,9 @@ export interface StreamChunk {
   error?: string;
 }
 
-// Интерфейс для параметров вызова
 export interface LlmCallOptions {
-  messages?: { role: string; content: string }[]; // классический формат
-  prompt?: string; // если нужен prompt
+  messages?: { role: string; content: string }[];
+  prompt?: string;
   temperature?: number;
   maxTokens?: number;
   topP?: number;
@@ -23,6 +19,5 @@ export interface LlmCallOptions {
 }
 
 export interface ILlmDriver {
-  // Метод возвращает асинхронный генератор, который выдаёт куски ответа (текст/usage/ошибки)
   stream(options: LlmCallOptions): AsyncGenerator<StreamChunk>;
 }

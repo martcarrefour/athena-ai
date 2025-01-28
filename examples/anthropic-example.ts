@@ -2,17 +2,13 @@ import { Athena } from "../src/Athena";
 import { AthenaConfig } from "../src/types";
 
 async function main() {
-  // 1. Конфиг для Anthropic
   const config: AthenaConfig = {
     provider: "anthropic",
-    apiKey: "anthropic-XXXXXXXXXXXXXXXX", // Ваш Anthropic ключ
-    // Тут не нужно baseUrl обычно, AnthropicDriver сам знает https://api.anthropic.com
+    apiKey: "anthropic-XXXXXXXXXXXXXXXX",
   };
 
-  // 2. Создаём ORM
   const anthropic = new Athena(config);
 
-  // 3. Вызов
   const result = await anthropic.call({
     messages: [
       { role: "system", content: "You are a wise assistant named Claude." },

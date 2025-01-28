@@ -1,4 +1,3 @@
-// src/AthenaORM/drivers/AnthropicDriver.ts
 import { ILlmDriver, LlmCallOptions, StreamChunk } from "./ILlmDriver";
 
 async function* anthropicStreamResponse(
@@ -50,12 +49,11 @@ async function* anthropicStreamResponse(
         if (!jsonStr || jsonStr === "[DONE]") continue;
         try {
           const parsed = JSON.parse(jsonStr);
-          // В зависимости от формата Anthropic,
-          // внутри будет поле completion, stop_reason, и т.д.
+
           if (parsed.stop_reason === "max_tokens") {
             // ...
           }
-          // Если есть usage, отдать
+
           if (
             parsed?.metadata?.input_tokens ||
             parsed?.metadata?.output_tokens
@@ -67,7 +65,7 @@ async function* anthropicStreamResponse(
               },
             };
           }
-          // Текстовые фрагменты
+
           if (parsed.completion) {
             yield { text: parsed.completion };
           }

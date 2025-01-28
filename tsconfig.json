@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES6", // Генерируем JS для ES6
-    "module": "ES6", // Используем ES-модули
-    "strict": true, // Включаем строгий режим TypeScript
-    "esModuleInterop": true, // Совместимость с CommonJS модулями
-    "skipLibCheck": true, // Пропускаем проверку типовых деклараций библиотек
-    "outDir": "./dist", // Папка для скомпилированного кода
-    "declaration": true, // Создаём файлы `.d.ts` для типов
-    "sourceMap": true, // Создаём карты источников
-    "rootDir": "./src", // Устанавливаем корень проекта
-    "baseUrl": "./src", // Базовый путь для алиасов
+    "target": "ES6",
+    "module": "ES6",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "declaration": true,
+    "sourceMap": true,
+    "rootDir": "./src",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"] // Настройка алиасов (например, import { X } from "@/module")
+      "@/*": ["./*"]
     }
   },
-  "include": ["src/**/*.ts"], // Включаем только файлы из src
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "examples"]
 }

@@ -35,9 +35,7 @@ async function* openaiStreamResponse(
     : "https://api.openai.com/v1/chat/completions";
 
   if (baseUrl) {
-    // Если пользователь задал свой `baseUrl`, используем его
     endpoint = baseUrl;
-    // Логика для определения нужного пути...
   }
 
   const response = await fetch(endpoint, {
@@ -55,7 +53,6 @@ async function* openaiStreamResponse(
     return;
   }
 
-  // 2. Читаем поток
   const reader = response.body?.getReader();
   if (!reader) return;
 
@@ -72,7 +69,6 @@ async function* openaiStreamResponse(
 
     for (const line of lines) {
       if (line.trim().startsWith("data: [DONE]")) {
-        // Стрим закончен
         return;
       }
       if (line.trim().startsWith("data:")) {
@@ -81,19 +77,15 @@ async function* openaiStreamResponse(
         try {
           const parsed = JSON.parse(jsonStr);
 
-          // Если есть usage (например, в финальном пакете OpenAI), можем отдать usage
           if (parsed.usage) {
             yield { usage: parsed.usage };
           }
 
-          // Стримим сам текст
           const choice = parsed?.choices?.[0];
           if (choice) {
             if ("text" in choice) {
-              // text-davinci-003
               yield { text: choice.text };
             } else if (choice.delta?.content) {
-              // gpt-3.5
               yield { text: choice.delta.content };
             }
           }
@@ -106,10 +98,7 @@ async function* openaiStreamResponse(
 }
 
 export class OpenAiDriver implements ILlmDriver {
-  constructor(
-    private apiKey: string,
-    private baseUrl: string = "" // необязательно: пользователь может указать свой
-  ) {}
+  constructor(private apiKey: string, private baseUrl: string = "") {}
 
   public async *stream(options: LlmCallOptions): AsyncGenerator<StreamChunk> {
     yield* openaiStreamResponse(this.apiKey, this.baseUrl, options);
