@@ -3,7 +3,11 @@ import { ILlmDriver, LlmCallOptions, StreamChunk } from "@/types";
 async function* googleStreamResponse(
   apiKey: string,
   model: string,
-  options: LlmCallOptions
+  options: LlmCallOptions,
+  externalFunctions: Record<
+    string,
+    (args: Record<string, any>) => Promise<any>
+  > = {}
 ): AsyncGenerator<StreamChunk> {
   const baseUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
     model
@@ -33,7 +37,7 @@ async function* googleStreamResponse(
 
   if (!response.ok) {
     const err = await response.text();
-    yield { error: `Google PaLM error: ${err}` };
+    yield { error: `Google error: ${err}` };
     return;
   }
 
@@ -55,12 +59,25 @@ async function* googleStreamResponse(
       if (line.startsWith("data: ")) {
         const jsonStr = line.replace("data: ", "").trim();
         if (!jsonStr || jsonStr === "[DONE]") continue;
+
         try {
           const parsed = JSON.parse(jsonStr);
-          // Google специфические поля
-          if (parsed.error) {
-            yield { error: JSON.stringify(parsed.error) };
-          } else if (parsed.usageMetadata) {
+
+          // Обработка вызовов функций
+          if (parsed.functionCall) {
+            const { name, arguments: args } = parsed.functionCall;
+
+            if (externalFunctions[name]) {
+              const result = await externalFunctions[name](JSON.parse(args));
+              yield { functionResponse: { name, result } };
+            } else {
+              yield { error: `Function "${name}" not found.` };
+            }
+            continue;
+          }
+
+          // Обработка метаданных использования
+          if (parsed.usageMetadata) {
             yield {
               usage: {
                 prompt_tokens: parsed.usageMetadata.promptTokenCount ?? 0,
@@ -69,6 +86,8 @@ async function* googleStreamResponse(
               },
             };
           }
+
+          // Обработка текста ответа
           if (parsed.candidates?.length) {
             const text = parsed.candidates[0].content.parts
               ?.map((p: any) => p.text)
@@ -86,9 +105,28 @@ async function* googleStreamResponse(
 }
 
 export class GoogleDriver implements ILlmDriver {
-  constructor(private apiKey: string, private model: string) {}
+  private externalFunctions: Record<
+    string,
+    (args: Record<string, any>) => Promise<any>
+  >;
+
+  constructor(
+    private apiKey: string,
+    private model: string,
+    externalFunctions: Record<
+      string,
+      (args: Record<string, any>) => Promise<any>
+    > = {}
+  ) {
+    this.externalFunctions = externalFunctions;
+  }
 
   public async *stream(options: LlmCallOptions): AsyncGenerator<StreamChunk> {
-    yield* googleStreamResponse(this.apiKey, this.model, options);
+    yield* googleStreamResponse(
+      this.apiKey,
+      this.model,
+      options,
+      this.externalFunctions
+    );
   }
 }

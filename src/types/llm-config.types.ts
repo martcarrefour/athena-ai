@@ -3,6 +3,9 @@ export interface AthenaConfig {
   apiKey: string;
   baseUrl?: string;
   model?: string;
+  functions?: Record<string, (args: Record<string, any>) => Promise<any>>;
+  temperature?: number;
+  maxTokens?: number;
 }
 
 export interface Message {
@@ -12,7 +15,7 @@ export interface Message {
 
 export interface LLMRequestOptions {
   messages: Message[];
-  format: "json" | "text";
+  format: "json" | "text" | "function";
   example?: Record<string, unknown>;
   temperature?: number;
   maxTokens?: number;

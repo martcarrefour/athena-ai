@@ -1,24 +1,29 @@
+import { AnthropicDriver, GoogleDriver, OpenAiDriver } from "@/drivers";
 import {
   AthenaConfig,
-  Message,
-  LLMRequestOptions,
-  LLMResponse,
   ILlmDriver,
   LlmCallOptions,
+  LLMRequestOptions,
+  LLMResponse,
+  Message,
   StreamChunk,
 } from "@/types";
 import { parseMarkdownToJson } from "@/utils";
-import { GoogleDriver, AnthropicDriver, OpenAiDriver } from "@/drivers";
 
 export class Athena {
   private driver: ILlmDriver;
   private context: Message[] = [];
+  private externalFunctions: Record<
+    string,
+    (args: Record<string, any>) => Promise<any>
+  >;
 
   constructor(private config: AthenaConfig) {
-    this.driver = this.selectDriver(config);
+    this.driver = this.initializeDriver(config);
+    this.externalFunctions = config.functions || {};
   }
 
-  private selectDriver(config: AthenaConfig): ILlmDriver {
+  private initializeDriver(config: AthenaConfig): ILlmDriver {
     switch (config.provider) {
       case "openai":
         return new OpenAiDriver(config.apiKey, config.baseUrl || "");
@@ -35,7 +40,20 @@ export class Athena {
   }
 
   public async *run(options: LlmCallOptions): AsyncGenerator<StreamChunk> {
-    yield* this.driver.stream(options);
+    for await (const chunk of this.driver.stream(options)) {
+      if (chunk.functionCall) {
+        const { name, arguments: args } = chunk.functionCall;
+
+        if (this.externalFunctions[name]) {
+          const result = await this.externalFunctions[name](args);
+          yield { functionResponse: { name, result } };
+        } else {
+          yield { error: `Function "${name}" not found.` };
+        }
+      } else {
+        yield chunk;
+      }
+    }
   }
 
   public async call(options: LlmCallOptions): Promise<string> {
@@ -64,6 +82,26 @@ export class Athena {
   }
 
   public async createMessage(options: LLMRequestOptions): Promise<LLMResponse> {
+    const messages = this.prepareMessages(options);
+
+    const rawResponse = await this.call({
+      messages,
+      temperature: options.temperature || 0.7,
+      maxTokens: options.maxTokens || 200,
+    });
+
+    const processedContent = this.processResponse(rawResponse, options);
+
+    return {
+      content:
+        typeof processedContent === "string"
+          ? processedContent
+          : JSON.stringify(processedContent, null, 2),
+      raw: rawResponse,
+    };
+  }
+
+  private prepareMessages(options: LLMRequestOptions): Message[] {
     const messages = [...this.context];
 
     if (options.format === "json" && options.example) {
@@ -76,35 +114,46 @@ export class Athena {
 
     messages.push(...options.messages);
 
-    const rawResponse = await this.call({
-      messages,
-      temperature: options.temperature || 0.7,
-      maxTokens: options.maxTokens || 200,
-    });
+    return messages;
+  }
 
-    let content: string | Record<string, unknown> = rawResponse;
-    if (options.format === "json") {
-      try {
-        content = JSON.parse(rawResponse);
-      } catch (error) {
-        content = parseMarkdownToJson(rawResponse);
+  private processResponse(
+    rawResponse: string,
+    options: LLMRequestOptions
+  ): string | Record<string, unknown> {
+    switch (options.format) {
+      case "text":
+        return rawResponse;
+
+      case "json": {
+        let parsedContent: unknown = rawResponse;
+
+        try {
+          parsedContent = JSON.parse(rawResponse) as Record<string, unknown>;
+        } catch {
+          parsedContent = parseMarkdownToJson(rawResponse);
+        }
+
+        if (
+          options.example &&
+          typeof parsedContent === "object" &&
+          parsedContent !== null
+        ) {
+          parsedContent = this.filterJsonByExample(
+            parsedContent as Record<string, unknown>,
+            options.example
+          );
+        }
+
+        return parsedContent as Record<string, unknown>;
       }
 
-      if (options.example) {
-        content = this.filterJsonByExample(
-          content as Record<string, unknown>,
-          options.example
-        );
-      }
+      case "function":
+        return { functionCall: rawResponse };
+
+      default:
+        return rawResponse;
     }
-
-    return {
-      content:
-        typeof content === "string"
-          ? content
-          : JSON.stringify(content, null, 2),
-      raw: rawResponse,
-    };
   }
 
   private filterJsonByExample(

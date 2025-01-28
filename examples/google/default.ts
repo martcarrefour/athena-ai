@@ -1,6 +1,6 @@
 import { config } from "dotenv";
-import { Athena, AthenaConfig } from "../src";
-import { isJson } from "../src/utils";
+import { Athena, AthenaConfig } from "../../src";
+import { isJson } from "../../src/utils";
 
 config();
 
@@ -18,18 +18,15 @@ async function main() {
   ]);
 
   const exampleJson = {
-    name: "",
-    age: 20,
-    gender: "male",
-    profession: "Engineer",
-    address: "Russia, Moscow",
+    coinSide: "",
   };
 
   const response = await google.createMessage({
     messages: [
       {
         role: "user",
-        content: "Provide information about a fictional person.",
+        content:
+          "Provide a JSON object with the following fields: coinSide (head or tail)",
       },
     ],
     format: "json",
