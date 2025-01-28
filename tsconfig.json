@@ -10,10 +10,17 @@
     "sourceMap": true,
     "rootDir": "./src",
     "baseUrl": "./src",
+
+    "moduleResolution": "node",
+
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@drivers/*": ["drivers/*"],
+      "@utils/*": ["utils/*"],
+      "@types/*": ["types/*"]
     }
   },
   "include": ["src/**/*.ts"],
+
   "exclude": ["node_modules", "dist", "examples"]
 }

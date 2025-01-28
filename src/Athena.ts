@@ -1,9 +1,14 @@
-import { ILlmDriver, LlmCallOptions, StreamChunk } from "./drivers/ILlmDriver";
-import { OpenAiDriver } from "./drivers/OpenAiDriver";
-import { AnthropicDriver } from "./drivers/AnthropicDriver";
-import { GoogleDriver } from "./drivers/GoogleDriver";
-import { AthenaConfig, Message, LLMRequestOptions, LLMResponse } from "./types";
+import {
+  AthenaConfig,
+  Message,
+  LLMRequestOptions,
+  LLMResponse,
+  ILlmDriver,
+  LlmCallOptions,
+  StreamChunk,
+} from "@/types";
 import { parseMarkdownToJson } from "@/utils";
+import { GoogleDriver, AnthropicDriver, OpenAiDriver } from "@/drivers";
 
 export class Athena {
   private driver: ILlmDriver;

@@ -16,28 +16,35 @@
     "run:google-example": "tsx examples/google-example.ts",
     "clean": "rm -rf dist"
   },
-  "keywords": [
+"keywords": [
+    "typescript",
     "llm",
-    "large language model",
-    "openai sdk",
-    "anthropic sdk",
-    "google palm sdk",
-    "unified llm api",
+    "ai",
+    "sdk",
+    "integration",
+    "ai tools",
+    "nlp",
+    "language models",
+    "openai",
+    "anthropic",
+    "google gemini",
     "ai sdk",
-    "ai chatbots",
-    "json response handling",
-    "typescript llm library",
-    "llm integration",
-    "nlp tools",
-    "ai development",
-    "context management",
-    "multi-turn conversation",
+    "llm library",
+    "ai integration",
+    "chatgpt",
     "ai assistants",
-    "athena-ai examples",
-    "data extraction from llm",
-    "ai data processing tools",
-    "llm abstraction"
-  ],
+    "context management",
+    "conversation management",
+    "json handling",
+    "ai development",
+    "ai chatbots",
+    "data extraction",
+    "data processing",
+    "ai abstraction",
+    "ai applications",
+    "llm tools"
+],
+
   "author": "Dmitriy Prokushev",
   "license": "Apache-2.0",
   "devDependencies": {
@@ -51,6 +58,7 @@
     "dist"
   ],
   "dependencies": {
+    "athena-ai": "^0.0.3",
     "dotenv": "^16.4.7"
   }
 }

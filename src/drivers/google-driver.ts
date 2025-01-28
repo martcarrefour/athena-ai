@@ -1,4 +1,4 @@
-import { ILlmDriver, LlmCallOptions, StreamChunk } from "./ILlmDriver";
+import { ILlmDriver, LlmCallOptions, StreamChunk } from "@/types";
 
 async function* googleStreamResponse(
   apiKey: string,
