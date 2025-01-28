@@ -13,7 +13,7 @@
     "build": "tsc",
     "example": "tsc && node dist/examples/openai-example.js",
     "publish:npm": "npm run clean && npm run build && npm publish",
-    "run:google-example": "tsx examples/google-example.ts",
+    "example:google": "tsx examples/google-example.ts",
     "clean": "rm -rf dist"
   },
   "keywords": [
@@ -48,6 +48,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/node": "^22.10.10",
+    "athena-ai": "^0.0.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.2",
@@ -57,7 +58,6 @@
     "dist"
   ],
   "dependencies": {
-    "athena-ai": "^0.0.3",
     "dotenv": "^16.4.7"
   }
 }

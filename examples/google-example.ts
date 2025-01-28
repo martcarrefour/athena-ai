@@ -1,6 +1,5 @@
 import { config } from "dotenv";
-import { Athena } from "../src/Athena";
-import { AthenaConfig } from "../src/types";
+import { Athena, AthenaConfig } from "../src";
 import { isJson } from "../src/utils";
 
 config();
@@ -33,7 +32,7 @@ async function main() {
         content: "Provide information about a fictional person.",
       },
     ],
-    format: "json",
+
     example: exampleJson,
     temperature: 1,
     maxTokens: 200,

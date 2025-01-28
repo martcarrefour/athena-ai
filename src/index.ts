@@ -1,3 +1,2 @@
 export { Athena } from "./athena";
-export * from "@/drivers";
-export * from "@/types";
+export { AthenaConfig } from "@/types";

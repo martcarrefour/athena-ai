@@ -12,7 +12,7 @@ export interface Message {
 
 export interface LLMRequestOptions {
   messages: Message[];
-  format?: "json" | "text";
+  format: "json" | "text";
   example?: Record<string, unknown>;
   temperature?: number;
   maxTokens?: number;

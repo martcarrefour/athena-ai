@@ -63,10 +63,6 @@ export class Athena {
     return this.context;
   }
 
-  /**
-   * Создание нового запроса с учётом контекста.
-   * Учитывает формат ответа (текст или JSON).
-   */
   public async createMessage(options: LLMRequestOptions): Promise<LLMResponse> {
     const messages = [...this.context];
 
@@ -111,9 +107,6 @@ export class Athena {
     };
   }
 
-  /**
-   * Фильтрует JSON, чтобы оставить только поля, указанные в примере.
-   */
   private filterJsonByExample(
     data: Record<string, unknown>,
     example: Record<string, unknown>
