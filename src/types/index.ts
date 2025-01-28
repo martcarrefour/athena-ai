@@ -1,2 +1,11 @@
-export * from "./llm-driver.types";
-export * from "./llm-config.types";
+export type {
+  ILlmDriver,
+  StreamChunk,
+  LlmCallOptions,
+} from "./llm-driver.types";
+export type {
+  AthenaConfig,
+  LLMRequestOptions,
+  LLMResponse,
+  Message,
+} from "./llm-config.types";

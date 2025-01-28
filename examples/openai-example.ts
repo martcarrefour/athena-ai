@@ -1,4 +1,4 @@
-import { Athena } from "../src/Athena";
+import { Athena } from "../src";
 import { AthenaConfig } from "../src/types";
 
 async function main() {

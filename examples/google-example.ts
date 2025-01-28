@@ -32,7 +32,7 @@ async function main() {
         content: "Provide information about a fictional person.",
       },
     ],
-
+    format: "json",
     example: exampleJson,
     temperature: 1,
     maxTokens: 200,
