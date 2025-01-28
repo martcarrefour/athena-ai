@@ -70,7 +70,11 @@ async function* anthropicStreamResponse(
             yield { text: parsed.completion };
           }
         } catch (err) {
-          yield { error: `JSON parse error: ${line}` };
+          yield {
+            error: `JSON parse error: ${
+              err instanceof Error ? err.message : String(err)
+            }`,
+          };
         }
       }
     }

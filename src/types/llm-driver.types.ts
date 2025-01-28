@@ -1,17 +1,17 @@
 export interface StreamChunk {
   text?: string;
   usage?: {
-    prompt_tokens: number;
-    completion_tokens: number;
+    prompt_tokens?: number;
+    completion_tokens?: number;
   };
   error?: string;
   functionCall?: {
     name: string;
-    arguments: Record<string, any>;
+    arguments: Record<string, unknown>;
   };
   functionResponse?: {
     name: string;
-    result: any;
+    result: unknown;
   };
 }
 
@@ -28,5 +28,5 @@ export interface LlmCallOptions {
 
 export interface ILlmDriver {
   stream(options: LlmCallOptions): AsyncGenerator<StreamChunk>;
-  callFunction?(name: string, args: Record<string, any>): Promise<any>;
+  callFunction?(name: string, args: Record<string, unknown>): Promise<unknown>;
 }

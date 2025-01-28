@@ -1,12 +1,52 @@
 import { ILlmDriver, LlmCallOptions, StreamChunk } from "@/types";
 
+interface OpenAiRequestParams {
+  model?: string;
+  prompt?: string;
+  messages?: Array<{
+    role: string;
+    content: string;
+  }>;
+  temperature?: number;
+  max_tokens?: number;
+  top_p?: number;
+  frequency_penalty?: number;
+  presence_penalty?: number;
+  stop?: string[];
+  stream: boolean;
+}
+
+interface OpenAiUsage {
+  prompt_tokens?: number;
+  completion_tokens?: number;
+  total_tokens?: number;
+}
+
+interface OpenAiChoice {
+  text?: string;
+  delta?: {
+    content?: string;
+  };
+}
+
+interface OpenAiResponseChunk {
+  id?: string;
+  object?: string;
+  created?: number;
+  model?: string;
+  usage?: OpenAiUsage;
+  choices?: OpenAiChoice[];
+}
+
 async function* openaiStreamResponse(
   apiKey: string,
   baseUrl: string,
   options: LlmCallOptions
 ): AsyncGenerator<StreamChunk> {
   const isCompletion = !!options.prompt;
-  const jsonData: Record<string, any> = isCompletion
+
+  // Формируем тело запроса к OpenAI
+  const jsonData: OpenAiRequestParams = isCompletion
     ? {
         model: baseUrl ? undefined : "text-davinci-003",
         prompt: options.prompt,
@@ -30,6 +70,7 @@ async function* openaiStreamResponse(
         stream: true,
       };
 
+  // Определяем конечную точку
   let endpoint = isCompletion
     ? "https://api.openai.com/v1/completions"
     : "https://api.openai.com/v1/chat/completions";
@@ -38,6 +79,7 @@ async function* openaiStreamResponse(
     endpoint = baseUrl;
   }
 
+  // Выполняем запрос
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
@@ -47,6 +89,7 @@ async function* openaiStreamResponse(
     body: JSON.stringify(jsonData),
   });
 
+  // Проверяем успешность ответа
   if (!response.ok) {
     const errText = await response.text();
     yield { error: `OpenAI error: ${errText}` };
@@ -59,6 +102,7 @@ async function* openaiStreamResponse(
   const decoder = new TextDecoder();
   let buffer = "";
 
+  // Читаем поток
   while (true) {
     const { value, done } = await reader.read();
     if (done) break;
@@ -68,35 +112,49 @@ async function* openaiStreamResponse(
     buffer = lines.pop() || "";
 
     for (const line of lines) {
-      if (line.trim().startsWith("data: [DONE]")) {
+      const trimmed = line.trim();
+
+      // Завершающий маркер потока
+      if (trimmed.startsWith("data: [DONE]")) {
         return;
       }
-      if (line.trim().startsWith("data:")) {
-        const jsonStr = line.replace("data:", "").trim();
-        if (!jsonStr) continue;
-        try {
-          const parsed = JSON.parse(jsonStr);
 
+      // Обрабатываем только строки с данными
+      if (trimmed.startsWith("data:")) {
+        const jsonStr = trimmed.replace("data:", "").trim();
+        if (!jsonStr) continue;
+
+        try {
+          // Парсим ответ как OpenAiResponseChunk
+          const parsed = JSON.parse(jsonStr) as OpenAiResponseChunk;
+
+          // usage
           if (parsed.usage) {
             yield { usage: parsed.usage };
           }
 
-          const choice = parsed?.choices?.[0];
+          // choices
+          const choice = parsed.choices?.[0];
           if (choice) {
-            if ("text" in choice) {
+            if (typeof choice.text === "string") {
+              // Сценарий completion
               yield { text: choice.text };
             } else if (choice.delta?.content) {
+              // Сценарий chat
               yield { text: choice.delta.content };
             }
           }
         } catch (err) {
-          yield { error: `JSON parse error: ${line}` };
+          yield {
+            error: `JSON parse error: ${
+              err instanceof Error ? err.message : String(err)
+            }`,
+          };
         }
       }
     }
   }
 }
-
 export class OpenAiDriver implements ILlmDriver {
   constructor(private apiKey: string, private baseUrl: string = "") {}
 

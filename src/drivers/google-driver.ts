@@ -6,7 +6,7 @@ async function* googleStreamResponse(
   options: LlmCallOptions,
   externalFunctions: Record<
     string,
-    (args: Record<string, any>) => Promise<any>
+    (args: Record<string, unknown>) => Promise<unknown>
   > = {}
 ): AsyncGenerator<StreamChunk> {
   const baseUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
@@ -63,12 +63,14 @@ async function* googleStreamResponse(
         try {
           const parsed = JSON.parse(jsonStr);
 
-          // Обработка вызовов функций
+          // Если модель вернула functionCall
           if (parsed.functionCall) {
             const { name, arguments: args } = parsed.functionCall;
 
             if (externalFunctions[name]) {
-              const result = await externalFunctions[name](JSON.parse(args));
+              // Парсим аргументы как Record<string, unknown>
+              const parsedArgs = JSON.parse(args) as Record<string, unknown>;
+              const result = await externalFunctions[name](parsedArgs);
               yield { functionResponse: { name, result } };
             } else {
               yield { error: `Function "${name}" not found.` };
@@ -76,7 +78,7 @@ async function* googleStreamResponse(
             continue;
           }
 
-          // Обработка метаданных использования
+          // Метаданные usage
           if (parsed.usageMetadata) {
             yield {
               usage: {
@@ -87,17 +89,21 @@ async function* googleStreamResponse(
             };
           }
 
-          // Обработка текста ответа
+          // Текстовая часть ответа
           if (parsed.candidates?.length) {
             const text = parsed.candidates[0].content.parts
-              ?.map((p: any) => p.text)
+              ?.map((p: { text: string }) => p.text)
               .join("");
             if (text) {
               yield { text };
             }
           }
         } catch (err) {
-          yield { error: `JSON parse error: ${line}` };
+          yield {
+            error: `JSON parse error: ${
+              err instanceof Error ? err.message : String(err)
+            }`,
+          };
         }
       }
     }
@@ -107,7 +113,7 @@ async function* googleStreamResponse(
 export class GoogleDriver implements ILlmDriver {
   private externalFunctions: Record<
     string,
-    (args: Record<string, any>) => Promise<any>
+    (args: Record<string, unknown>) => Promise<unknown>
   >;
 
   constructor(
@@ -115,7 +121,7 @@ export class GoogleDriver implements ILlmDriver {
     private model: string,
     externalFunctions: Record<
       string,
-      (args: Record<string, any>) => Promise<any>
+      (args: Record<string, unknown>) => Promise<unknown>
     > = {}
   ) {
     this.externalFunctions = externalFunctions;

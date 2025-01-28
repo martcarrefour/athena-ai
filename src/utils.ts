@@ -2,7 +2,6 @@ export function parseMarkdownToJson(md: string): Record<string, unknown> {
   const jsonMatch = md.match(/```json\n([\s\S]+?)\n```/);
   if (jsonMatch) {
     try {
-      // Парсим содержимое JSON
       return JSON.parse(jsonMatch[1]);
     } catch (error: unknown) {
       const errorMessage =

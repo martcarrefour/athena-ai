@@ -3,7 +3,10 @@ export interface AthenaConfig {
   apiKey: string;
   baseUrl?: string;
   model?: string;
-  functions?: Record<string, (args: Record<string, any>) => Promise<any>>;
+  functions?: Record<
+    string,
+    (args: Record<string, unknown>) => Promise<unknown>
+  >;
   temperature?: number;
   maxTokens?: number;
 }
