@@ -26,16 +26,16 @@ If you're a developer building applications that rely on LLMs, AthenaORM provide
 ## Example:
 
 ```typescript
-import { AthenaORM } from "athena-orm";
+import { Athena } from "athena-ai";
 
 const config = {
   provider: "openai",
   apiKey: "your-api-key",
 };
 
-const orm = new AthenaORM(config);
+const ai = new Athena(config);
 
-const response = await orm.createMessage({
+const response = await ai.createMessage({
   messages: [
     { role: "system", content: "You are a helpful assistant." },
     { role: "user", content: "Tell me about the future of AI." },

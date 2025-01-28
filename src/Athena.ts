@@ -5,7 +5,7 @@ import { GoogleDriver } from "./drivers/GoogleDriver";
 import { AthenaConfig, Message, LLMRequestOptions, LLMResponse } from "./types";
 import { parseMarkdownToJson } from "@/utils";
 
-export class AthenaORM {
+export class Athena {
   private driver: ILlmDriver;
   private context: Message[] = [];
 

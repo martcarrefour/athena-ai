@@ -1,4 +1,4 @@
-import { AthenaORM } from "../src/AthenaORM";
+import { Athena } from "../src/Athena";
 import { AthenaConfig } from "../src/types";
 
 async function main() {
@@ -11,10 +11,10 @@ async function main() {
   };
 
   // 2. Создаём ORM
-  const openaiOrm = new AthenaORM(config);
+  const openai = new Athena(config);
 
   // 3. Пример вызова (получить весь ответ сразу, без стрима)
-  const result = await openaiOrm.call({
+  const result = await openai.call({
     messages: [
       { role: "system", content: "You are a helpful assistant." },
       { role: "user", content: "Hello, how are you?" },

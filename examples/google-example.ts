@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { AthenaORM } from "../src/AthenaORM";
+import { Athena } from "../src/Athena";
 import { AthenaConfig } from "../src/types";
 import { isJson } from "../src/utils";
 
@@ -14,11 +14,10 @@ async function main() {
     model: "gemini-1.5-flash", // Используем корректное имя модели
   };
 
-  // Создаём ORM
-  const googleOrm = new AthenaORM(config);
+  const google = new Athena(config);
 
   // Устанавливаем контекст
-  googleOrm.addToContext([
+  google.addToContext([
     { role: "user", content: "You are a helpful assistant." },
   ]);
 
@@ -32,7 +31,7 @@ async function main() {
   };
 
   // Отправляем запрос
-  const response = await googleOrm.createMessage({
+  const response = await google.createMessage({
     messages: [
       {
         role: "user",

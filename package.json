@@ -1,9 +1,9 @@
 {
-  "name": "athena-orm",
+  "name": "athena-ai",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/martcarrefour/athena-orm.git"
+    "url": "https://github.com/martcarrefour/athena-ai.git"
   },
   "version": "0.0.2",
   "description": "AthenaORM is a lightweight and developer-friendly library for interacting with Large Language Models (LLMs) like OpenAI, Anthropic, and Google PaLM. It provides a unified interface for managing multi-turn conversations, handling JSON or text-based responses, and simplifying API integrations.",
@@ -33,7 +33,7 @@
     "context management",
     "multi-turn conversation",
     "ai assistants",
-    "athena-orm examples",
+    "athena-ai examples",
     "data extraction from llm",
     "ai data processing tools",
     "llm abstraction"
@@ -51,6 +51,7 @@
     "dist"
   ],
   "dependencies": {
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "npm-name": "^8.0.0"
   }
 }

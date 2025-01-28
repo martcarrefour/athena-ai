@@ -1,4 +1,4 @@
-import { AthenaORM } from "../src/AthenaORM";
+import { Athena } from "../src/Athena";
 import { AthenaConfig } from "../src/types";
 
 async function main() {
@@ -10,10 +10,10 @@ async function main() {
   };
 
   // 2. Создаём ORM
-  const anthropicOrm = new AthenaORM(config);
+  const anthropic = new Athena(config);
 
   // 3. Вызов
-  const result = await anthropicOrm.call({
+  const result = await anthropic.call({
     messages: [
       { role: "system", content: "You are a wise assistant named Claude." },
       { role: "user", content: "Please tell me a short story about cats." },
