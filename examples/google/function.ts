@@ -91,9 +91,6 @@ async function main() {
     maxTokens: 200,
   });
 
-  console.log("Raw Response Content:", response.raw);
-
-  // Проверка валидности ответа
   if (isJson(response.content)) {
     console.log(
       "Parsed JSON Response:",

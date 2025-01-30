@@ -15,7 +15,7 @@ export class Athena {
   private context: Message[] = [];
   private externalFunctions: Record<
     string,
-    (args: Record<string, any>) => Promise<any>
+    (args: Record<string, unknown>) => Promise<unknown>
   >;
 
   constructor(private config: AthenaConfig) {
