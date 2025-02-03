@@ -1,15 +1,14 @@
-import { AnthropicDriver, GoogleDriver, OpenAiDriver } from "drivers";
+import { OpenAiDriver, AnthropicDriver, GoogleDriver } from "./drivers";
 import {
-  AthenaConfig,
   ILlmDriver,
+  Message,
+  AthenaConfig,
   LlmCallOptions,
+  StreamChunk,
   LLMRequestOptions,
   LLMResponse,
-  Message,
-  StreamChunk,
-} from "types";
-import "tsconfig-paths/register";
-import { parseMarkdownToJson } from "utils";
+} from "./types";
+import { parseMarkdownToJson } from "./utils";
 
 export class Athena {
   private driver: ILlmDriver;

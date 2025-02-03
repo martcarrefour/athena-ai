@@ -1,6 +1,5 @@
 {
   "name": "athena-ai",
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/martcarrefour/athena-ai.git"
@@ -9,6 +8,7 @@
   "description": "Athena is a lightweight and developer-friendly library for interacting with Large Language Models (LLMs) like OpenAI, Anthropic, and Google PaLM. It provides a unified interface for managing multi-turn conversations, handling JSON or text-based responses, and simplifying API integrations.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "example": "tsc && node dist/examples/openai-example.js",
