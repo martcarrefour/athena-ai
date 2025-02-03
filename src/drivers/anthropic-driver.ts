@@ -1,4 +1,4 @@
-import { ILlmDriver, LlmCallOptions, StreamChunk } from "@/types";
+import { ILlmDriver, LlmCallOptions, StreamChunk } from "types";
 
 async function* anthropicStreamResponse(
   apiKey: string,

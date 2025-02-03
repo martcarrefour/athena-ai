@@ -1,4 +1,4 @@
-import { ILlmDriver, LlmCallOptions, StreamChunk } from "@/types";
+import { ILlmDriver, LlmCallOptions, StreamChunk } from "types";
 
 interface OpenAiRequestParams {
   model?: string;

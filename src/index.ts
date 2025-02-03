@@ -1,2 +1,2 @@
-export { Athena } from "@/Athena";
-export type { AthenaConfig } from "@/types";
+export { Athena } from "./Athena";
+export type { AthenaConfig } from "./types";

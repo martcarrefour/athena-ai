@@ -12,14 +12,7 @@
     "rootDir": "./src",
     "baseUrl": "./src",
 
-    "moduleResolution": "node",
-
-    "paths": {
-      "@/*": ["./*"],
-      "@drivers/*": ["drivers/*"],
-      "@utils/*": ["utils/*"],
-      "@types/*": ["types/*"]
-    }
+    "moduleResolution": "node"
   },
   "include": ["src/**/*.ts"],
 

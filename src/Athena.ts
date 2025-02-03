@@ -1,4 +1,4 @@
-import { AnthropicDriver, GoogleDriver, OpenAiDriver } from "@/drivers";
+import { AnthropicDriver, GoogleDriver, OpenAiDriver } from "drivers";
 import {
   AthenaConfig,
   ILlmDriver,
@@ -7,8 +7,8 @@ import {
   LLMResponse,
   Message,
   StreamChunk,
-} from "@/types";
-import { parseMarkdownToJson } from "@/utils";
+} from "types";
+import { parseMarkdownToJson } from "utils";
 
 export class Athena {
   private driver: ILlmDriver;
